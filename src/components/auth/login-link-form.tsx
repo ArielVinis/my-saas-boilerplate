@@ -45,7 +45,7 @@ export function LoginLinkForm({
     >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Receber link de acesso</h1>
+          <h1 className="text-2xl font-bold">Login com link de acesso</h1>
           <p className="text-muted-foreground text-sm text-balance">
             Digite seu email abaixo para receber um link de acesso
           </p>
