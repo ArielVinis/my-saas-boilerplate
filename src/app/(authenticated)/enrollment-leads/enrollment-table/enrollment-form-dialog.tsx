@@ -1,5 +1,4 @@
 "use client";
-
 import { createEnrollmentGroup } from "@/API/leads/leads";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -31,7 +30,7 @@ import { TooltipAction } from "@/components/ui/tooltip-action";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { PencilIcon, Plus } from "lucide-react";
+import { IconPencil, IconPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -231,11 +230,11 @@ export function EnrollmentFormDialog({
         <DialogTrigger asChild>
           {enrollment ? (
             <Button variant="ghost" size="sm">
-              <PencilIcon className="h-4 w-4" />
+              <IconPencil className="h-4 w-4" />
             </Button>
           ) : (
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
+              <IconPlus className="mr-2 h-4 w-4" />
               Novo Parceiro
             </Button>
           )}

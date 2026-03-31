@@ -1,5 +1,4 @@
 "use client";
-
 import { searchLeads } from "@/API/leads/leads";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +19,12 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, Loader2, Search, X } from "lucide-react";
+import {
+  IconArrowsUpDown,
+  IconLoader2,
+  IconSearch,
+  IconX,
+} from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -215,7 +219,7 @@ export function EnrollmentTable() {
       {/* Campo de busca */}
       <div className="mb-4 flex gap-2" onClick={(e) => e.stopPropagation()}>
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
+          <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
           <Input
             placeholder="Buscar por email, CPF ou telefone..."
             value={searchTerm}
@@ -255,7 +259,7 @@ export function EnrollmentTable() {
               className="absolute right-3 top-1/2 transform -translate-y-1/2 hover:bg-muted rounded p-1 transition-colors z-20"
               aria-label="Limpar busca"
             >
-              <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+              <IconX className="h-4 w-4 text-muted-foreground hover:text-foreground" />
             </button>
           )}
         </div>
@@ -268,9 +272,9 @@ export function EnrollmentTable() {
           disabled={isSearching || !searchTerm.trim()}
         >
           {isSearching ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            <Search className="mr-2 h-4 w-4" />
+            <IconSearch className="mr-2 h-4 w-4" />
           )}
           {isSearching ? "Buscando..." : "Buscar"}
         </Button>
@@ -293,7 +297,7 @@ export function EnrollmentTable() {
                             header.getContext(),
                           )}
                           {header.column.getCanSort() && (
-                            <ArrowUpDown className="h-4 w-4" />
+                            <IconArrowsUpDown className="h-4 w-4" />
                           )}
                         </div>
                       )}
