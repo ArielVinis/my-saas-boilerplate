@@ -1,7 +1,6 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
+import { IconMoonStars as Moon, IconSun as Sun } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore } from "react";
 
