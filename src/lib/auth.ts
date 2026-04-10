@@ -11,7 +11,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60 * 24 * 2, // 2 days
+    maxAge: 60 * 60 * 24 * 3, // 3 days
     updateAge: 60 * 60 * 24, // 24 hours
   },
   providers: [
