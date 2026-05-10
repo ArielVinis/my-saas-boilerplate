@@ -1,9 +1,9 @@
-import { LoginForm } from "@/src/components/auth/login-form"
 import Link from "next/link"
 import { PATHS } from "@/src/constants/PATHS"
 import Image from "next/image"
+import { ForgotPasswordForm } from "@/src/components/auth/forgot-password-form"
 
-export default function LoginPage() {
+export default function ForgotPasswordPage() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -26,7 +26,7 @@ export default function LoginPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <LoginForm />
+            <ForgotPasswordForm />
           </div>
         </div>
       </div>
