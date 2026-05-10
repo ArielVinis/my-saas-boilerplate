@@ -1,73 +1,125 @@
-import NextAuth from "next-auth";
-import GitHub from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
-import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
-import { prisma } from "./prisma";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { paths } from "@/lib/paths";
+import { betterAuth, User } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { lastLoginMethod, organization } from "better-auth/plugins";
+import { db } from "@/lib/prisma";
+import { nextCookies } from "better-auth/next-js";
+import {
+  ac,
+  ADMIN,
+  OWNER,
+  MANAGER,
+  MEMBER,
+  CLIENT,
+} from "@/lib/auth/permissions";
+import { OrganizationInvitationEmail } from "@/components/emails/organization-invitation";
+import { ResetPasswordEmail } from "@/components/emails/reset-password";
+import { VerifyEmail } from "@/components/emails/verify-email";
+import { Resend } from "resend";
+import { getActiveOrganization } from "@/app/server/organizations/organizations";
+import { paths } from "./paths";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  debug: process.env.AUTH_DEBUG === "true",
-  adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: "jwt",
-    maxAge: 60 * 60 * 24 * 3, // 3 days
-    updateAge: 60 * 60 * 24, // 24 hours
+const baseUrl = process.env.BETTER_AUTH_URL as string;
+const invitationAcceptUrl = (invitationId: string) =>
+  `${baseUrl}${paths.api.acceptInvitation(invitationId)}`;
+
+// Passar para a /lib depois
+const resend = new Resend(process.env.RESEND_API_KEY);
+const emailNoReply = process.env.EMAIL_NO_REPLY as string;
+
+export const auth = betterAuth({
+  database: prismaAdapter(db, {
+    provider: "sqlite",
+  }),
+
+  trustedOrigins: [baseUrl],
+
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+    microsoft: {
+      clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID as string,
+      clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET as string,
+      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER as string,
+    },
   },
-  providers: [
-    MicrosoftEntraID({
-      clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
-      clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
+
+  databaseHooks: {
+    session: {
+      create: {
+        before: async (session) => {
+          const organization = await getActiveOrganization(session.userId);
+          return {
+            data: {
+              ...session,
+              activeOrganizationId: organization?.id,
+            },
+          };
+        },
+      },
+    },
+  },
+
+  emailAndPassword: {
+    enabled: true,
+    async sendResetPassword({ user, url }) {
+      await resend.emails.send({
+        from: emailNoReply,
+        to: user.email,
+        subject: "Redefina sua senha",
+        react: ResetPasswordEmail({
+          userName: user.name,
+          resetUrl: url,
+        }),
+      });
+    },
+    requireEmailVerification: true,
+  },
+
+  emailVerification: {
+    sendOnSignUp: true,
+    async sendVerificationEmail({ user, url }: { user: User; url: string }) {
+      await resend.emails.send({
+        from: emailNoReply,
+        to: user.email,
+        subject: "Verifique seu email",
+        react: VerifyEmail({
+          userName: user.name,
+          verificationUrl: url,
+        }),
+      });
+    },
+  },
+
+  plugins: [
+    lastLoginMethod(),
+    nextCookies(),
+
+    organization({
+      ac,
+      roles: {
+        ADMIN,
+        OWNER,
+        MANAGER,
+        MEMBER,
+        CLIENT,
+      },
+      async sendInvitationEmail(data) {
+        const inviteUrl = invitationAcceptUrl(data.id);
+        await resend.emails.send({
+          from: emailNoReply,
+          to: data.email,
+          subject: `Convite para a agência ${data.organization.name}`,
+          react: OrganizationInvitationEmail({
+            inviteUrl,
+            inviterName: data.inviter.user.name,
+            inviterEmail: data.inviter.user.email,
+            organizationName: data.organization.name,
+            role: data.role,
+          }),
+        });
+      },
     }),
-    GitHub,
-    Google,
   ],
-  pages: {
-    signIn: paths.auth.login,
-    signOut: paths.auth.login,
-    error: paths.auth.login,
-    verifyRequest: paths.auth.login,
-    newUser: paths.dashboard,
-  },
-  callbacks: {
-    authorized: async ({ auth }) => {
-      return !!auth;
-    },
-    jwt: async ({ token, account }) => {
-      if (account) {
-        token.access_token = account.access_token;
-        token.refresh_token = account.refresh_token;
-        token.expires_at = account.expires_at;
-      }
-      return token;
-    },
-    session: async ({ session, token, user }) => {
-      if (session?.user && token != null) {
-        session.user.id = token.sub ?? "";
-        session.user.name = token.name ?? user.name;
-        session.user.email = token.email ?? user.email;
-        session.user.image = token.picture ?? user.image;
-        session.session_token = token.session_token as string;
-      }
-      return session;
-    },
-  },
 });
-
-export function sessionToGetUser(
-  session: {
-    user?: {
-      name?: string | null;
-      email?: string | null;
-      image?: string | null;
-    };
-  } | null,
-) {
-  if (!session?.user) return null;
-  return {
-    name: session.user.name ?? "User",
-    email: session.user.email ?? "",
-    avatar: session.user.image ?? "",
-  };
-}
