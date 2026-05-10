@@ -1,11 +1,13 @@
 "use client";
-import { logout } from "@/API/auth/auth";
+
+import { signOut } from "@/lib/auth-client";
+import { paths } from "@/lib/paths";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useEffect } from "react";
 
-const LogoutPage = () => {
+export const LogoutPage = () => {
   useEffect(() => {
-    logout();
+    signOut({ query: { redirect: paths.auth.login } });
   }, []);
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -15,5 +17,3 @@ const LogoutPage = () => {
     </div>
   );
 };
-
-export default LogoutPage;
