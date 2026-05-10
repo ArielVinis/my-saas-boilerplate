@@ -1,85 +1,178 @@
-"use client";
+"use client"
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/src/lib/utils"
+import { Button } from "@/src/components/ui/button"
+import { Input } from "@/src/components/ui/input"
+import Link from "next/link"
+import { PATHS } from "@/src/constants/PATHS"
+import { signIn } from "@/src/server/auth/users"
+import z from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from "@/components/ui/field";
-import { paths } from "@/lib/paths";
-import { signIn } from "next-auth/react";
-import { Input } from "@/components/ui/input";
-import { IconBrandGoogle } from "@tabler/icons-react";
-import Link from "next/link";
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { useTransition } from "react"
+import { Loader2 } from "lucide-react"
+import { authClient } from "@/src/lib/auth-client"
+import Image from "next/image"
+import { Badge } from "../ui/badge"
+
+const formSchema = z.object({
+  email: z.string().email("Email inválido"),
+  password: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
+})
 
 export function LoginForm({
   className,
   ...props
-}: React.ComponentProps<"form">) {
+}: React.ComponentPropsWithoutRef<"form">) {
+  const [isPending, startTransition] = useTransition()
+  const router = useRouter()
+  const lastMethod = authClient.getLastUsedLoginMethod()
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    startTransition(async () => {
+      const { success, message } = await signIn(data.email, data.password)
+      if (success) {
+        toast.success(message)
+        router.push(PATHS.PANEL.ROOT)
+      } else {
+        toast.error(message)
+      }
+    })
+  }
+
+  const signInWithGoogle = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: PATHS.PANEL.ROOT,
+    })
+  }
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
-      <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Acessar sua conta</h1>
-          <p className="text-sm text-balance text-muted-foreground">
-            Digite seu email abaixo para acessar sua conta
-          </p>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn("flex flex-col gap-6", className)}
+        {...props}
+      >
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="text-2xl font-bold">Acesse sua conta</h1>
         </div>
-        <Field>
-          <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input id="email" type="email" placeholder="m@example.com" required />
-        </Field>
-        <Field>
-          <div className="flex items-center">
-            <FieldLabel htmlFor="password">Senha</FieldLabel>
+        <div className="grid gap-6">
+          <div className="grid gap-2">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="relative">
+                    Endereço de e-mail
+                    {lastMethod === "email" && (
+                      <Badge
+                        variant="secondary"
+                        className="absolute right-1 top-[-9px] text-xs"
+                      >
+                        Último uso
+                      </Badge>
+                    )}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="joao@example.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid gap-2">
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="A senha deve ter 8 caracteres"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Link
-              href={paths.auth.signup}
-              className="ml-auto text-sm underline-offset-4 hover:underline"
+              href={PATHS.AUTH.FORGOT_PASSWORD}
+              className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
             >
               Esqueceu sua senha?
             </Link>
           </div>
-          <Input id="password" type="password" required />
-        </Field>
-        <Field>
-          <Button type="submit">Acessar</Button>
-        </Field>
-
-        <FieldSeparator>Ou continue com</FieldSeparator>
-        <Field className="flex flex-col gap-2">
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? <Loader2 className="size-4 animate-spin" /> : "Login"}
+          </Button>
+          <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+            <span className="relative z-10 bg-background px-2 text-muted-foreground">
+              Ou continue com
+            </span>
+          </div>
           <Button
             variant="outline"
+            className="relative w-full"
             type="button"
-            className="w-full"
-            onClick={() =>
-              signIn("microsoft-entra-id", { callbackUrl: paths.root })
-            }
+            onClick={signInWithGoogle}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 23 23"
-              className="size-5"
-            >
-              <path fill="#f35325" d="M1 1h10v10H1z" />
-              <path fill="#81bc06" d="M12 1h10v10H12z" />
-              <path fill="#05a6f0" d="M1 12h10v10H1z" />
-              <path fill="#ffba08" d="M12 12h10v10H12z" />
-            </svg>
-            Entrar com Microsoft
+            <Image
+              alt="Fazer login com o Google"
+              src="/google.svg"
+              width={18}
+              height={18}
+            />
+            Login com Google
+            {lastMethod === "google" && (
+              <Badge
+                variant="secondary"
+                className="absolute right-1 top-[-9px] text-xs"
+              >
+                Último uso
+              </Badge>
+            )}
           </Button>
-          <Button
-            variant="outline"
-            type="button"
-            className="w-full"
-            onClick={() => signIn("google", { callbackUrl: paths.root })}
+        </div>
+        <div className="text-center text-sm">
+          Não tem uma conta?{" "}
+          <Link
+            href={PATHS.AUTH.SIGN_UP}
+            className="underline underline-offset-4"
           >
-            <IconBrandGoogle className="size-5" />
-            Entrar com Google
-          </Button>
-        </Field>
-      </FieldGroup>
-    </form>
-  );
+            Criar conta
+          </Link>
+        </div>
+      </form>
+    </Form>
+  )
 }
