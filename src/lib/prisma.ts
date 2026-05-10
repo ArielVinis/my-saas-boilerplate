@@ -9,4 +9,4 @@ const connectionString = `${process.env.DATABASE_URL}`;
 const adapter = new PrismaBetterSqlite3({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-export { prisma };
+export const db = prisma;
