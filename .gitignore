@@ -41,5 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 /prisma/generated/prisma
+
+# lockfiles de outros gestores (este projeto usa pnpm)
 package-lock.json
+pnpm-lock.yaml
 bun.lock
+yarn.lock
