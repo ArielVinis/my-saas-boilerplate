@@ -4,8 +4,8 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 import { POST } from "../APIservice";
-import { paths } from "@/lib/paths";
-import { signOut } from "@/lib/auth";
+import { paths } from "@/shared/constants/paths";
+import { signOut } from "@/shared/lib/auth";
 
 // Modo de desenvolvimento sem back-end
 const MOCK_MODE = process.env.NEXT_PUBLIC_MOCK_API === "true";
