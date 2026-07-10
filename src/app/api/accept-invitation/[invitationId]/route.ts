@@ -1,7 +1,7 @@
-import { auth } from "@/lib/auth";
+import { auth } from "@/shared/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { paths } from "@/lib/paths";
+import { paths } from "@/shared/constants/paths";
 
 export async function GET(
   request: NextRequest,
