@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TooltipAction } from "@/components/ui/tooltip-action";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { IconPencil, IconPlus } from "@tabler/icons-react";

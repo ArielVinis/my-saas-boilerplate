@@ -1,14 +1,13 @@
-import { auth, sessionToGetUser } from "@/lib/auth";
 import { AppSidebar } from "@/components/templates/Sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { getCurrentUser } from "@/server/auth/users";
 
 export default async function LayoutContainer({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-  const user = sessionToGetUser(session);
+  const { user } = await getCurrentUser();
 
   return (
     <SidebarProvider>
