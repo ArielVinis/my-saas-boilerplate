@@ -1,7 +1,7 @@
 "use client";
 
-import { signOut } from "@/lib/auth-client";
-import { paths } from "@/lib/paths";
+import { signOut } from "@/shared/lib/auth-client";
+import { paths } from "@/shared/constants/paths";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useEffect } from "react";
 
