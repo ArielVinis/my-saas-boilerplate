@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "../components/ui/tooltip";
 import { Toaster } from "sonner";
 import ThemeSwitcher from "@/components/templates/ThemeSwitcher/ThemeSwitcher";
 import Provider from "./providers/Provider";
+import { cn } from "@/shared/lib/utils";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Grupo AG Capital",
+  title: "NOME DA EMPRESA AQUI",
   description: "Aplicativo interno para uso corporativo",
   icons: {
     icon: "/logo_dark.png",
@@ -32,7 +35,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html
+      lang="pt-BR"
+      suppressHydrationWarning
+      className={cn("font-sans", inter.variable)}
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

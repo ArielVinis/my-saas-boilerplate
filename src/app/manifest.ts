@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
-import { paths } from "@/lib/paths";
+import { paths } from "@/shared/constants/paths";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Grupo AG Capital",
-    short_name: "AG",
-    description: "Grupo AG Capital é um sistema interno para uso corporativo.",
+    name: "NOME DA EMPRESA AQUI",
+    short_name: "EMPRESA",
+    description:
+      "NOME DA EMPRESA AQUI é um sistema interno para uso corporativo.",
     start_url: paths.auth.login,
     display: "standalone",
     background_color: "#ffffff",
