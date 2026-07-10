@@ -1,39 +1,44 @@
 import { NextResponse } from "next/server";
-import type { NextAuthRequest } from "next-auth";
+import type { NextRequest } from "next/server";
+import { paths } from "@/shared/constants/paths";
+import { auth } from "@/shared/lib/auth";
+import { db } from "@/shared/lib/prisma";
+import { Role } from "../prisma/generated/prisma/enums";
 
-import { auth } from "@/lib/auth";
-import { paths } from "@/lib/paths";
-
-function isPublicPath(pathname: string) {
-  return pathname.startsWith(paths.auth.root) || pathname === paths.auth.logout;
-}
-
-export const proxy = auth(async (req: NextAuthRequest) => {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (req.auth?.user && pathname.startsWith(paths.auth.root)) {
-    return NextResponse.redirect(new URL(paths.dashboard, req.url));
+  const session = await auth.api.getSession({
+    headers: req.headers,
+  });
+
+  if (!session) {
+    const loginUrl = new URL(paths.auth.login, req.url);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  if (isPublicPath(pathname)) {
-    return NextResponse.next();
+  const user = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true },
+  });
+
+  if (!user) {
+    return NextResponse.redirect(new URL(paths.auth.login, req.url));
   }
 
-  if (!req.auth?.user) {
-    const login = new URL(paths.auth.login, req.url);
-    login.searchParams.set("callbackUrl", `${pathname}${req.nextUrl.search}`);
-    return NextResponse.redirect(login);
-  }
+  const canAccessPanel =
+    user.role === Role.OWNER ||
+    user.role === Role.MEMBER ||
+    user.role === Role.MANAGER;
 
-  if (pathname === paths.root) {
-    return NextResponse.redirect(new URL(paths.dashboard, req.url));
+  if (!canAccessPanel) {
+    return NextResponse.redirect(new URL(paths.auth.login, req.url));
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  matcher: ["/panel/:path*"],
 };
