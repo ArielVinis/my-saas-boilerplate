@@ -15,7 +15,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { paths } from "@/lib/paths";
+import { paths } from "@/shared/constants/paths";
 import { IconDotsVertical, IconLogout } from "@tabler/icons-react";
 
 interface User {

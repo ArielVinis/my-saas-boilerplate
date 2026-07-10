@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/src/lib/utils"
+import { cn } from "@/shared/lib/utils"
 import { Button } from "@/src/components/ui/button"
 import { Input } from "@/src/components/ui/input"
 import Link from "next/link"
@@ -21,7 +21,7 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { Loader2 } from "lucide-react"
-import { authClient } from "@/src/lib/auth-client"
+import { authClient } from "@/shared/lib/auth-client"
 import Image from "next/image"
 import { Badge } from "../ui/badge"
 

@@ -17,7 +17,7 @@ interface ThemeLogoProps {
 }
 
 export function ThemeLogo({
-  alt = "Grupo AG Capital",
+  alt = "NOME DA EMPRESA AQUI",
   width = 200,
   height = 200,
   className = "w-full object-cover",
