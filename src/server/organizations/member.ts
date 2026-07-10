@@ -1,7 +1,7 @@
 "use server";
 
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/prisma";
+import { auth } from "@/shared/lib/auth";
+import { db } from "@/shared/lib/prisma";
 import { isAdmin } from "../auth/permissions";
 import { headers } from "next/headers";
 import { Role } from "../../../../prisma/generated/prisma/enums";

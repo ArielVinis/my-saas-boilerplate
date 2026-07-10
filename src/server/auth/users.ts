@@ -1,8 +1,8 @@
 "use server";
 
-import { paths } from "@/lib/paths";
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/prisma";
+import { paths } from "@/shared/constants/paths";
+import { auth } from "@/shared/lib/auth";
+import { db } from "@/shared/lib/prisma";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -40,7 +40,7 @@ export const signIn = async (email: string, password: string) => {
       },
     });
     return { success: true, message: "Login successful" };
-  } catch (error: any) {
+  } catch (error: unknown) {
     const e = error as Error;
 
     return {

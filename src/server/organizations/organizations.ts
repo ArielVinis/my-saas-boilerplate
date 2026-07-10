@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "@/lib/prisma";
+import { db } from "@/shared/lib/prisma";
 import { getCurrentUser } from "../auth/users";
 
 export async function getOrganizations() {

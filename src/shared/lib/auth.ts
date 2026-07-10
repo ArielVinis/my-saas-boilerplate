@@ -1,7 +1,7 @@
 import { betterAuth, User } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { lastLoginMethod, organization } from "better-auth/plugins";
-import { db } from "@/lib/prisma";
+import { db } from "@/shared/lib/prisma";
 import { nextCookies } from "better-auth/next-js";
 import {
   ac,
@@ -10,13 +10,13 @@ import {
   MANAGER,
   MEMBER,
   CLIENT,
-} from "@/lib/auth/permissions";
+} from "@/shared/lib/permissions";
 import { OrganizationInvitationEmail } from "@/components/emails/organization-invitation";
 import { ResetPasswordEmail } from "@/components/emails/reset-password";
 import { VerifyEmail } from "@/components/emails/verify-email";
 import { Resend } from "resend";
-import { getActiveOrganization } from "@/app/server/organizations/organizations";
-import { paths } from "./paths";
+import { getActiveOrganization } from "@/server/organizations/organizations";
+import { paths } from "@/shared/constants/paths";
 
 const baseUrl = process.env.BETTER_AUTH_URL as string;
 const invitationAcceptUrl = (invitationId: string) =>
