@@ -48,11 +48,11 @@ Em **Certificates & secrets**, client secrets têm validade. Se expirou:
 
 1. Crie um novo client secret.
 2. Copie o valor e atualize `AUTH_MICROSOFT_ENTRA_ID_SECRET` no `.env`.
-3. Reinicie o servidor (ex.: `bun dev`).
+3. Reinicie o servidor (ex.: `pnpm dev`).
 
 ### 5. Reiniciar o servidor
 
-Depois de alterar `.env`, reinicie o processo do Next.js (por exemplo, pare e rode de novo `bun dev` ou `npm run dev`).
+Depois de alterar `.env`, reinicie o processo do Next.js (por exemplo, pare e rode de novo `pnpm dev`).
 
 ---
 
