@@ -1,11 +1,11 @@
 "use client"
 
 import { cn } from "@/shared/lib/utils"
-import { Button } from "@/src/components/ui/button"
-import { Input } from "@/src/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import Link from "next/link"
-import { PATHS } from "@/src/constants/PATHS"
-import { signUp } from "@/src/server/auth/users"
+import { paths } from "@/shared/constants/paths"
+import { signUp } from "@/server/auth/users"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import z from "zod"
@@ -61,7 +61,7 @@ export function SignupForm({
       )
       if (success) {
         toast.success(`${message}. Verifique seu email para ativar sua conta.`)
-        router.push(PATHS.PANEL.ROOT)
+        router.push(paths.dashboard)
       } else {
         toast.error(message)
       }
@@ -71,7 +71,7 @@ export function SignupForm({
   const signUpWithGoogle = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: PATHS.PANEL.ROOT,
+      callbackURL: paths.dashboard,
     })
   }
 
@@ -202,7 +202,7 @@ export function SignupForm({
           <p className="text-center text-sm">
             Já tem uma conta?{" "}
             <Link
-              href={PATHS.AUTH.LOGIN}
+              href={paths.auth.login}
               className="underline underline-offset-4"
             >
               Fazer login

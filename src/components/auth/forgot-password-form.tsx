@@ -1,10 +1,10 @@
 "use client"
 
 import { cn } from "@/shared/lib/utils"
-import { Button } from "@/src/components/ui/button"
-import { Input } from "@/src/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import Link from "next/link"
-import { PATHS } from "@/src/constants/PATHS"
+import { paths } from "@/shared/constants/paths"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import z from "zod"
@@ -44,14 +44,14 @@ export function ForgotPasswordForm({
     startTransition(async () => {
       const { error } = await authClient.requestPasswordReset({
         email: data.email,
-        redirectTo: PATHS.AUTH.RESET_PASSWORD,
+        redirectTo: paths.auth.resetPassword,
       })
 
       if (error) {
         toast.error(error.message)
       } else {
         toast.success("Link de redefinição enviado com sucesso")
-        router.push(PATHS.AUTH.LOGIN)
+        router.push(paths.auth.login)
       }
     })
   }
@@ -108,7 +108,7 @@ export function ForgotPasswordForm({
         <div className="text-center text-sm">
           Lembrou da senha?{" "}
           <Link
-            href={PATHS.AUTH.LOGIN}
+            href={paths.auth.login}
             className="underline underline-offset-4"
           >
             Voltar para login

@@ -1,10 +1,10 @@
 "use client"
 
 import { cn } from "@/shared/lib/utils"
-import { Button } from "@/src/components/ui/button"
-import { Input } from "@/src/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import Link from "next/link"
-import { PATHS } from "@/src/constants/PATHS"
+import { paths } from "@/shared/constants/paths"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import z from "zod"
@@ -65,7 +65,7 @@ export function ResetPasswordForm({
       toast.error(error.message)
     } else {
       toast.success("Senha redefinida com sucesso")
-      router.push(PATHS.AUTH.LOGIN)
+      router.push(paths.auth.login)
     }
   }
 
@@ -138,7 +138,7 @@ export function ResetPasswordForm({
         <div className="text-center text-sm">
           Lembrou da senha?{" "}
           <Link
-            href={PATHS.AUTH.LOGIN}
+            href={paths.auth.login}
             className="underline underline-offset-4"
           >
             Voltar para login

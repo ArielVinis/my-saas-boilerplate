@@ -1,7 +1,7 @@
 import Link from "next/link"
-import { PATHS } from "@/src/constants/PATHS"
+import { paths } from "@/shared/constants/paths"
 import Image from "next/image"
-import { ForgotPasswordForm } from "@/src/components/auth/forgot-password-form"
+import { ForgotPasswordForm } from "@/components/auth/forgot-password-form"
 
 export default function ForgotPasswordPage() {
   return (
@@ -9,7 +9,7 @@ export default function ForgotPasswordPage() {
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <Link
-            href={PATHS.ROOT}
+            href={paths.root}
             className="flex items-center gap-2 font-medium"
           >
             <div className="flex h-20 w-20 items-center justify-center">

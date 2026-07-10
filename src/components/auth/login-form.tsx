@@ -1,11 +1,11 @@
 "use client"
 
 import { cn } from "@/shared/lib/utils"
-import { Button } from "@/src/components/ui/button"
-import { Input } from "@/src/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import Link from "next/link"
-import { PATHS } from "@/src/constants/PATHS"
-import { signIn } from "@/src/server/auth/users"
+import { paths } from "@/shared/constants/paths"
+import { signIn } from "@/server/auth/users"
 import z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -51,7 +51,7 @@ export function LoginForm({
       const { success, message } = await signIn(data.email, data.password)
       if (success) {
         toast.success(message)
-        router.push(PATHS.PANEL.ROOT)
+        router.push(paths.dashboard)
       } else {
         toast.error(message)
       }
@@ -61,7 +61,7 @@ export function LoginForm({
   const signInWithGoogle = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: PATHS.PANEL.ROOT,
+      callbackURL: paths.dashboard,
     })
   }
 
@@ -126,7 +126,7 @@ export function LoginForm({
               )}
             />
             <Link
-              href={PATHS.AUTH.FORGOT_PASSWORD}
+              href={paths.auth.forgotPassword}
               className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
             >
               Esqueceu sua senha?
@@ -166,7 +166,7 @@ export function LoginForm({
         <div className="text-center text-sm">
           Não tem uma conta?{" "}
           <Link
-            href={PATHS.AUTH.SIGN_UP}
+            href={paths.auth.signup}
             className="underline underline-offset-4"
           >
             Criar conta

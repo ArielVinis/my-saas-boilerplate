@@ -1,19 +1,23 @@
 "use client"
 
-import type { Organization } from "@/prisma/generated/prisma/browser"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/src/components/ui/select"
+} from "@/components/ui/select"
 import { authClient } from "@/shared/lib/auth-client"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
+type OrganizationOption = {
+  id: string
+  name: string
+}
+
 type OrganizationSwitcherProps = {
-  organizations: Organization[]
+  organizations: OrganizationOption[]
 }
 
 export function OrganizationSwitcher({

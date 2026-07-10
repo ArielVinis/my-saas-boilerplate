@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { paths } from "@/shared/constants/paths";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
+import { signIn } from "@/shared/lib/auth-client";
 import { toast } from "sonner";
 
 export function LoginLinkForm({
@@ -24,17 +24,17 @@ export function LoginLinkForm({
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    try {
-      console.log(data);
-      await signIn("nodemailer", {
-        email: data.email,
-        redirect: false,
-      });
+    const { error } = await signIn.magicLink({
+      email: data.email,
+      callbackURL: paths.dashboard,
+    });
 
-      toast.success("Link de acesso enviado com sucesso, verifique seu email");
-    } catch {
-      toast.error("Erro ao enviar link de acesso");
+    if (error) {
+      toast.error(error.message || "Erro ao enviar link de acesso");
+      return;
     }
+
+    toast.success("Link de acesso enviado com sucesso, verifique seu email");
   });
 
   return (

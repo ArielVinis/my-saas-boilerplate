@@ -1,7 +1,8 @@
 import Link from "next/link"
-import { PATHS } from "@/src/constants/PATHS"
+import { paths } from "@/shared/constants/paths"
 import Image from "next/image"
-import { ResetPasswordForm } from "@/src/components/auth/reset-password-form"
+import { ResetPasswordForm } from "@/components/auth/reset-password-form"
+import { Suspense } from "react"
 
 export default function ResetPasswordPage() {
   return (
@@ -9,7 +10,7 @@ export default function ResetPasswordPage() {
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <Link
-            href={PATHS.ROOT}
+            href={paths.root}
             className="flex items-center gap-2 font-medium"
           >
             <div className="flex h-20 w-20 items-center justify-center">
@@ -26,7 +27,9 @@ export default function ResetPasswordPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <ResetPasswordForm />
+            <Suspense fallback={null}>
+              <ResetPasswordForm />
+            </Suspense>
           </div>
         </div>
       </div>

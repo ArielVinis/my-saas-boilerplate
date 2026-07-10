@@ -4,7 +4,7 @@ import { auth } from "@/shared/lib/auth";
 import { db } from "@/shared/lib/prisma";
 import { isAdmin } from "../auth/permissions";
 import { headers } from "next/headers";
-import { Role } from "../../../../prisma/generated/prisma/enums";
+import { Role } from "../../../prisma/generated/prisma/enums";
 
 export const addMember = async (
   userId: string,

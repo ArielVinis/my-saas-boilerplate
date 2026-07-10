@@ -5,7 +5,7 @@ import { paths } from "@/shared/constants/paths";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useEffect } from "react";
 
-export const LogoutPage = () => {
+export default function LogoutPage() {
   useEffect(() => {
     signOut({ query: { redirect: paths.auth.login } });
   }, []);
@@ -16,4 +16,4 @@ export const LogoutPage = () => {
       </h1>
     </div>
   );
-};
+}

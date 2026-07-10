@@ -1,6 +1,6 @@
 import { betterAuth, User } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { lastLoginMethod, organization } from "better-auth/plugins";
+import { lastLoginMethod, magicLink, organization } from "better-auth/plugins";
 import { db } from "@/shared/lib/prisma";
 import { nextCookies } from "better-auth/next-js";
 import {
@@ -37,11 +37,6 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    },
-    microsoft: {
-      clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID as string,
-      clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET as string,
-      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER as string,
     },
   },
 
@@ -95,7 +90,19 @@ export const auth = betterAuth({
   plugins: [
     lastLoginMethod(),
     nextCookies(),
-
+    magicLink({
+      async sendMagicLink({ email, url }) {
+        await resend.emails.send({
+          from: emailNoReply,
+          to: email,
+          subject: "Seu link de acesso",
+          react: VerifyEmail({
+            userName: email,
+            verificationUrl: url,
+          }),
+        });
+      },
+    }),
     organization({
       ac,
       roles: {

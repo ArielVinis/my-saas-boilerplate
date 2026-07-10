@@ -1,11 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { POST } from "../APIservice";
 import { paths } from "@/shared/constants/paths";
-import { signOut } from "@/shared/lib/auth";
+import { auth } from "@/shared/lib/auth";
 
 // Modo de desenvolvimento sem back-end
 const MOCK_MODE = process.env.NEXT_PUBLIC_MOCK_API === "true";
@@ -25,7 +26,10 @@ export const logout = async () => {
   jar.delete("access_token");
   jar.delete("auth_token");
   revalidatePath(paths.root);
-  await signOut({ redirectTo: paths.auth.login });
+  await auth.api.signOut({
+    headers: await headers(),
+  });
+  redirect(paths.auth.login);
 };
 
 export const validateToken = async (token: string) => {

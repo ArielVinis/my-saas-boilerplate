@@ -9,9 +9,15 @@ export default async function LayoutContainer({
 }) {
   const { user } = await getCurrentUser();
 
+  const sidebarUser = {
+    name: user.name ?? "Usuário",
+    email: user.email ?? "",
+    avatar: user.image ?? "/logo_dark.png",
+  };
+
   return (
     <SidebarProvider>
-      <AppSidebar user={user} variant="inset" />
+      <AppSidebar user={sidebarUser} variant="inset" />
       <SidebarInset>
         <div className="flex flex-col flex-1">{children}</div>
       </SidebarInset>
