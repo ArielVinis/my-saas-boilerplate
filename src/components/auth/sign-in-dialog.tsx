@@ -1,11 +1,11 @@
-import { signIn } from "@/shared/lib/auth-client"
-import { Button } from "../ui/button"
-import { DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog"
-import Image from "next/image"
+import { signIn } from "@/shared/lib/auth-client";
+import { Button } from "../ui/button";
+import { DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
+import { IconBrandGoogle } from "@tabler/icons-react";
 
 const SignInDialog = ({ callbackUrl }: { callbackUrl?: string }) => {
   const handleLoginWithGoogleClick = () =>
-    signIn.social({ provider: "google", callbackURL: callbackUrl })
+    signIn.social({ provider: "google", callbackURL: callbackUrl });
 
   return (
     <>
@@ -21,16 +21,11 @@ const SignInDialog = ({ callbackUrl }: { callbackUrl?: string }) => {
         className="gap-1 font-bold"
         onClick={handleLoginWithGoogleClick}
       >
-        <Image
-          alt="Fazer login com o Google"
-          src="/google.svg"
-          width={18}
-          height={18}
-        />
+        <IconBrandGoogle className="size-4" />
         Google
       </Button>
     </>
-  )
-}
+  );
+};
 
-export default SignInDialog
+export default SignInDialog;

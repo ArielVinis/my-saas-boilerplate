@@ -44,7 +44,7 @@ export const getMe = async (token: string) => {
     return {
       id: 1,
       email: "teste@email.com",
-      name: "FranceTech",
+      name: "Boilerplate",
     };
   }
   return POST("/auth/me", { token });

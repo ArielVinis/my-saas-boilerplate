@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { cn } from "@/shared/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import Link from "next/link"
-import { paths } from "@/shared/constants/paths"
-import { signUp } from "@/server/auth/users"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import z from "zod"
+import { cn } from "@/shared/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { paths } from "@/shared/constants/paths";
+import { signUp } from "@/server/auth/users";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import z from "zod";
 import {
   Form,
   FormField,
@@ -16,13 +16,13 @@ import {
   FormControl,
   FormMessage,
   FormLabel,
-} from "../ui/form"
-import { toast } from "sonner"
-import { useTransition } from "react"
-import { Loader2 } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { authClient } from "@/shared/lib/auth-client"
-import Image from "next/image"
+} from "../ui/form";
+import { toast } from "sonner";
+import { useTransition } from "react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/shared/lib/auth-client";
+import { IconBrandGoogle } from "@tabler/icons-react";
 
 const formSchema = z.object({
   name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres").trim(),
@@ -32,14 +32,14 @@ const formSchema = z.object({
     .string()
     .min(8, "Senha deve ter pelo menos 8 caracteres")
     .trim(),
-})
+});
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,7 +49,7 @@ export function SignupForm({
       password: "",
       confirmPassword: "",
     },
-  })
+  });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     startTransition(async () => {
@@ -58,22 +58,22 @@ export function SignupForm({
         data.email,
         data.password,
         data.confirmPassword,
-      )
+      );
       if (success) {
-        toast.success(`${message}. Verifique seu email para ativar sua conta.`)
-        router.push(paths.dashboard)
+        toast.success(`${message}. Verifique seu email para ativar sua conta.`);
+        router.push(paths.dashboard);
       } else {
-        toast.error(message)
+        toast.error(message);
       }
-    })
-  }
+    });
+  };
 
   const signUpWithGoogle = async () => {
     await authClient.signIn.social({
       provider: "google",
       callbackURL: paths.dashboard,
-    })
-  }
+    });
+  };
 
   return (
     <Form {...form}>
@@ -191,12 +191,7 @@ export function SignupForm({
         </div>
         <div className="grid gap-2">
           <Button variant="outline" type="button" onClick={signUpWithGoogle}>
-            <Image
-              alt="Fazer login com o Google"
-              src="/google.svg"
-              width={18}
-              height={18}
-            />
+            <IconBrandGoogle className="size-4" />
             Criar conta com Google
           </Button>
           <p className="text-center text-sm">
@@ -211,5 +206,5 @@ export function SignupForm({
         </div>
       </form>
     </Form>
-  )
+  );
 }

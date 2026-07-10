@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { cn } from "@/shared/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import Link from "next/link"
-import { paths } from "@/shared/constants/paths"
-import { signIn } from "@/server/auth/users"
-import z from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { cn } from "@/shared/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { paths } from "@/shared/constants/paths";
+import { signIn } from "@/server/auth/users";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -16,27 +16,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { useTransition } from "react"
-import { Loader2 } from "lucide-react"
-import { authClient } from "@/shared/lib/auth-client"
-import Image from "next/image"
-import { Badge } from "../ui/badge"
+} from "../ui/form";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { Loader2 } from "lucide-react";
+import { authClient } from "@/shared/lib/auth-client";
+import { Badge } from "../ui/badge";
+import { IconBrandGoogle } from "@tabler/icons-react";
 
 const formSchema = z.object({
   email: z.string().email("Email inválido"),
   password: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
-})
+});
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
-  const lastMethod = authClient.getLastUsedLoginMethod()
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+  const lastMethod = authClient.getLastUsedLoginMethod();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,26 +44,26 @@ export function LoginForm({
       email: "",
       password: "",
     },
-  })
+  });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     startTransition(async () => {
-      const { success, message } = await signIn(data.email, data.password)
+      const { success, message } = await signIn(data.email, data.password);
       if (success) {
-        toast.success(message)
-        router.push(paths.dashboard)
+        toast.success(message);
+        router.push(paths.dashboard);
       } else {
-        toast.error(message)
+        toast.error(message);
       }
-    })
-  }
+    });
+  };
 
   const signInWithGoogle = async () => {
     await authClient.signIn.social({
       provider: "google",
       callbackURL: paths.dashboard,
-    })
-  }
+    });
+  };
 
   return (
     <Form {...form}>
@@ -146,12 +146,7 @@ export function LoginForm({
             type="button"
             onClick={signInWithGoogle}
           >
-            <Image
-              alt="Fazer login com o Google"
-              src="/google.svg"
-              width={18}
-              height={18}
-            />
+            <IconBrandGoogle className="size-4" />
             Login com Google
             {lastMethod === "google" && (
               <Badge
@@ -174,5 +169,5 @@ export function LoginForm({
         </div>
       </form>
     </Form>
-  )
+  );
 }

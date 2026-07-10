@@ -5,17 +5,16 @@ import {
   Head,
   Heading,
   Html,
-  Link,
   Preview,
   Section,
   Text,
   Tailwind,
-} from "react-email"
+} from "react-email";
 
 type VerifyEmailProps = {
-  userName: string
-  verificationUrl: string
-}
+  userName: string;
+  verificationUrl: string;
+};
 
 export function VerifyEmail({ userName, verificationUrl }: VerifyEmailProps) {
   return (
@@ -80,15 +79,10 @@ export function VerifyEmail({ userName, verificationUrl }: VerifyEmailProps) {
               <Text className="m-0 text-center text-[12px] text-gray-500">
                 123 Rua da Empresa, São José, BR
               </Text>
-              <Text className="m-0 text-center text-[12px] text-gray-500">
-                <Link href="#" className="text-gray-500 no-underline">
-                  Desinscrever
-                </Link>
-              </Text>
             </Section>
           </Container>
         </Body>
       </Tailwind>
     </Html>
-  )
+  );
 }

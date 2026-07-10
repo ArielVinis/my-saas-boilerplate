@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { paths } from "@/shared/constants/paths"
-import Image from "next/image"
-import { ForgotPasswordForm } from "@/components/auth/forgot-password-form"
+import Link from "next/link";
+import { paths } from "@/shared/constants/paths";
+import Image from "next/image";
+import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 
 export default function ForgotPasswordPage() {
   return (
@@ -15,13 +15,13 @@ export default function ForgotPasswordPage() {
             <div className="flex h-20 w-20 items-center justify-center">
               <Image
                 src="/logo.png"
-                alt="FranceTech"
+                alt="Boilerplate"
                 width={200}
                 height={200}
                 className="mx-auto max-w-full object-contain"
               />
             </div>
-            France Barber
+            Boilerplate
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -39,5 +39,5 @@ export default function ForgotPasswordPage() {
         />
       </div>
     </div>
-  )
+  );
 }

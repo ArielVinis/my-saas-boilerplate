@@ -5,17 +5,16 @@ import {
   Head,
   Heading,
   Html,
-  Link,
   Preview,
   Section,
   Tailwind,
   Text,
-} from "react-email"
+} from "react-email";
 
 type ResetPasswordEmailProps = {
-  userName: string
-  resetUrl: string
-}
+  userName: string;
+  resetUrl: string;
+};
 
 export function ResetPasswordEmail({
   userName,
@@ -73,15 +72,10 @@ export function ResetPasswordEmail({
               <Text className="m-0 text-center text-[12px] text-gray-500">
                 123 Rua da Empresa, São José, BR
               </Text>
-              <Text className="m-0 text-center text-[12px] text-gray-500">
-                <Link href="#" className="text-gray-500 no-underline">
-                  Desinscrever
-                </Link>
-              </Text>
             </Section>
           </Container>
         </Body>
       </Tailwind>
     </Html>
-  )
+  );
 }

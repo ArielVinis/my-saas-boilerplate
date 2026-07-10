@@ -4,7 +4,7 @@ globs: []
 alwaysApply: true
 ---
 
-# France Barbershop — Core
+# Boilerplate — Core
 
 ## Stack
 
@@ -25,14 +25,14 @@ Antes de criar ficheiros ou abstrações novas, **ler o domínio existente** e r
 
 ### Camadas (`features/[nome]/`)
 
-| Ficheiro | Responsabilidade |
-| -------- | ---------------- |
-| `[nome].repository.ts` | Queries/mutações Prisma (`db` em `@/src/shared/lib/prisma`) |
-| `[nome].service.ts` | Regras de negócio — sem `'use server'`, sem `revalidatePath` |
-| `[nome].schema.ts` | Schemas Zod |
-| `[nome].types.ts` | Tipos do domínio (planos, sem depender de Prisma no client) |
-| `[nome].actions.ts` / `[nome].panel.actions.ts` | Server Actions finas: validar → service → revalidar |
-| `_lib/` | Utilitários puros do domínio (agregações, serialização, helpers) |
+| Ficheiro                                        | Responsabilidade                                                 |
+| ----------------------------------------------- | ---------------------------------------------------------------- |
+| `[nome].repository.ts`                          | Queries/mutações Prisma (`db` em `@/src/shared/lib/prisma`)      |
+| `[nome].service.ts`                             | Regras de negócio — sem `'use server'`, sem `revalidatePath`     |
+| `[nome].schema.ts`                              | Schemas Zod                                                      |
+| `[nome].types.ts`                               | Tipos do domínio (planos, sem depender de Prisma no client)      |
+| `[nome].actions.ts` / `[nome].panel.actions.ts` | Server Actions finas: validar → service → revalidar              |
+| `_lib/`                                         | Utilitários puros do domínio (agregações, serialização, helpers) |
 
 ### Importação
 

@@ -5,20 +5,19 @@ import {
   Head,
   Heading,
   Html,
-  Link,
   Preview,
   Section,
   Tailwind,
   Text,
-} from "react-email"
+} from "react-email";
 
 type OrganizationInvitationEmailProps = {
-  inviteUrl: string
-  inviterName: string
-  inviterEmail: string
-  organizationName: string
-  role: string
-}
+  inviteUrl: string;
+  inviterName: string;
+  inviterEmail: string;
+  organizationName: string;
+  role: string;
+};
 
 const ROLE_LABELS: Record<string, string> = {
   owner: "Proprietário",
@@ -26,10 +25,10 @@ const ROLE_LABELS: Record<string, string> = {
   manager: "Gerente",
   member: "Membro",
   client: "Cliente",
-}
+};
 
 function formatRole(role: string) {
-  return ROLE_LABELS[role.toLowerCase()] ?? role
+  return ROLE_LABELS[role.toLowerCase()] ?? role;
 }
 
 export function OrganizationInvitationEmail({
@@ -42,8 +41,7 @@ export function OrganizationInvitationEmail({
     <Html lang="pt-BR" dir="ltr">
       <Head />
       <Preview>
-        Convite para participar da organização {organizationName} na France
-        Barber
+        Convite para participar da organização {organizationName} na Boilerplate
       </Preview>
       <Tailwind>
         <Body className="bg-gray-100 py-[40px] font-sans">
@@ -57,9 +55,9 @@ export function OrganizationInvitationEmail({
 
               <Text className="mb-[16px] text-[16px] text-gray-700">
                 <span className="font-medium">{inviterName}</span> convidou você
-                para entrar na barbearia{" "}
+                para entrar na organização{" "}
                 <span className="font-medium">{organizationName}</span> na
-                plataforma France Barber, com o papel de{" "}
+                plataforma Boilerplate, com o papel de{" "}
                 <span className="font-medium">{formatRole(role)}</span>.
               </Text>
 
@@ -92,20 +90,15 @@ export function OrganizationInvitationEmail({
 
             <Section className="mt-[32px] border-t border-gray-200 pt-[24px]">
               <Text className="m-0 text-center text-[12px] text-gray-500">
-                © 2026 Seu Nome da Empresa. Todos os direitos reservados.
+                © 2026 Boilerplate. Todos os direitos reservados.
               </Text>
               <Text className="m-0 text-center text-[12px] text-gray-500">
                 123 Rua da Empresa, São José, BR
-              </Text>
-              <Text className="m-0 text-center text-[12px] text-gray-500">
-                <Link href="#" className="text-gray-500 no-underline">
-                  Desinscrever
-                </Link>
               </Text>
             </Section>
           </Container>
         </Body>
       </Tailwind>
     </Html>
-  )
+  );
 }
