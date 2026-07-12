@@ -3,6 +3,7 @@
 import { NavMain } from "@/components/templates/Sidebar/nav-main";
 import { NavSection } from "@/components/templates/Sidebar/nav-section";
 import { NavUser } from "@/components/templates/Sidebar/nav-user";
+import { OrganizationSwitcher } from "@/components/auth/organization-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -22,15 +23,21 @@ const defaultUser: SidebarUser = {
 
 export function AppSidebar({
   user,
+  organizations = [],
+  activeOrganizationId = null,
   ...props
-}: React.ComponentProps<typeof Sidebar> & { user?: SidebarUser | null }) {
+}: React.ComponentProps<typeof Sidebar> & {
+  user?: SidebarUser | null;
+  organizations?: { id: string; name: string }[];
+  activeOrganizationId?: string | null;
+}) {
   const sidebarUser = user ?? defaultUser;
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem className="w-full px-15 mb-[-20px]">
+          <SidebarMenuItem className="w-full px-15">
             <ThemeLogo
               width={200}
               height={200}
@@ -38,6 +45,12 @@ export function AppSidebar({
             />
           </SidebarMenuItem>
         </SidebarMenu>
+        <div className="px-2 pb-2">
+          <OrganizationSwitcher
+            organizations={organizations}
+            activeOrganizationId={activeOrganizationId}
+          />
+        </div>
       </SidebarHeader>
       <SidebarContent className="px-2">
         <NavMain items={sidebarItems.navMain} />
