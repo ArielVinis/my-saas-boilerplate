@@ -1,43 +1,177 @@
-import { LoginForm } from "@/components/auth/login-form";
+"use client";
+
+import { cn } from "@/shared/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { paths } from "@/shared/constants/paths";
-import Image from "next/image";
+import { signIn } from "@/server/auth/users";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useSyncExternalStore, useTransition } from "react";
+import { Loader2 } from "lucide-react";
+import { authClient } from "@/shared/lib/auth-client";
+import { Badge } from "@/components/ui/badge";
+import { IconBrandGoogle } from "@tabler/icons-react";
 
-export default function LoginPage() {
+const formSchema = z.object({
+  email: z.string().email("Email inválido"),
+  password: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
+});
+
+export function LoginForm({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"form">) {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+  const lastMethod = useSyncExternalStore(
+    () => () => {},
+    () => authClient.getLastUsedLoginMethod() ?? null,
+    () => null,
+  );
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    startTransition(async () => {
+      const { success, message } = await signIn(data.email, data.password);
+      if (success) {
+        toast.success(message);
+        router.push(paths.dashboard);
+      } else {
+        toast.error(message);
+      }
+    });
+  };
+
+  const signInWithGoogle = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: paths.dashboard,
+    });
+  };
+
   return (
-    <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <Link
-            href={paths.root}
-            className="flex items-center gap-2 font-medium"
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn("flex flex-col gap-6", className)}
+        {...props}
+      >
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="text-2xl font-bold">Acesse sua conta</h1>
+        </div>
+        <div className="grid gap-6">
+          <div className="grid gap-2">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="relative">
+                    Endereço de e-mail
+                    {lastMethod === "email" && (
+                      <Badge
+                        variant="secondary"
+                        className="absolute right-1 top-[-9px] text-xs"
+                      >
+                        Último uso
+                      </Badge>
+                    )}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="joao@example.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid gap-2">
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="A senha deve ter 8 caracteres"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Link
+              href={paths.auth.forgotPassword}
+              className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+            >
+              Esqueceu sua senha?
+            </Link>
+          </div>
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? <Loader2 className="size-4 animate-spin" /> : "Login"}
+          </Button>
+          <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+            <span className="relative z-10 bg-background px-2 text-muted-foreground">
+              Ou continue com
+            </span>
+          </div>
+          <Button
+            variant="outline"
+            className="relative w-full"
+            type="button"
+            onClick={signInWithGoogle}
           >
-            <div className="flex h-20 w-20 items-center justify-center">
-              <Image
-                src="/logo.png"
-                alt="Boilerplate"
-                width={200}
-                height={200}
-                className="mx-auto max-w-full object-contain"
-              />
-            </div>
-            Boilerplate
+            <IconBrandGoogle className="size-4" />
+            Login com Google
+            {lastMethod === "google" && (
+              <Badge
+                variant="secondary"
+                className="absolute right-1 top-[-9px] text-xs"
+              >
+                Último uso
+              </Badge>
+            )}
+          </Button>
+        </div>
+        <div className="text-center text-sm">
+          Não tem uma conta?{" "}
+          <Link
+            href={paths.auth.signup}
+            className="underline underline-offset-4"
+          >
+            Criar conta
           </Link>
         </div>
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
-            <LoginForm />
-          </div>
-        </div>
-      </div>
-      <div className="relative hidden bg-muted lg:block">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="https://i.pinimg.com/736x/64/54/ae/6454ae91eb3a58e151efce7e1121c14a.jpg"
-          alt="Barbershop interior"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
-      </div>
-    </div>
+      </form>
+    </Form>
   );
 }
