@@ -4,6 +4,7 @@ export const paths = Object.freeze({
   enrollmentLeads: "/enrollment-leads",
   whatsapp: "/whatsapp",
   reports: "/reports",
+  organizacao: "/organizacao",
 
   auth: {
     root: "/auth",
