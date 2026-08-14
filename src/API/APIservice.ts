@@ -12,16 +12,12 @@ apiClient.interceptors.request.use(
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
     const authToken = cookieStore.get("auth_token")?.value;
-    const xAccessToken = process.env.HOTSCOOL_X_ACCESS_TOKEN;
 
     if (accessToken) {
       config.headers["Access-Token"] = accessToken;
     }
     if (authToken) {
       config.headers["Authorization"] = `Bearer ${authToken}`;
-    }
-    if (xAccessToken) {
-      config.headers["x-access-token"] = xAccessToken;
     }
 
     return config;
