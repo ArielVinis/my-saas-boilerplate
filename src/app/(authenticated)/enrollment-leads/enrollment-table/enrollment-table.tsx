@@ -14,10 +14,13 @@ import { TooltipAction } from "@/components/ui/tooltip-action";
 import { useMutation } from "@tanstack/react-query";
 import {
   type ColumnDef,
+  columnVisibilityFeature,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+  useTable,
 } from "@tanstack/react-table";
 import {
   IconArrowsUpDown,
@@ -49,7 +52,14 @@ type SearchResult = {
   timestamp: string;
 };
 
-const columns: ColumnDef<LeadRow>[] = [
+const features = tableFeatures({
+  columnVisibilityFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+});
+
+const columns: ColumnDef<typeof features, LeadRow>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -135,7 +145,7 @@ export function EnrollmentTable() {
 
   const { mutate: searchMutation, isPending: isSearching } = useMutation({
     mutationFn: (searchParams: Record<string, unknown>) =>
-      searchLeads(searchParams, 0),
+      searchLeads<LeadRow>(searchParams, 0),
     onSuccess: (result) => {
       if (result.data && result.data.length > 0) {
         setSearchResults(result);
@@ -191,14 +201,11 @@ export function EnrollmentTable() {
   // Usa dados da busca
   const tableData = useMemo(() => searchResults?.data || [], [searchResults]);
 
-  // TanStack Table uses interior mutability; React Compiler skips memoizing this component.
-  // eslint-disable-next-line -- useReactTable incompatible with compiler memoization
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data: tableData,
     columns,
     getRowId: (row: LeadRow) => row.id?.toString() || Math.random().toString(),
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     state: {
       sorting,
