@@ -8,18 +8,19 @@ export default function manifest(): MetadataRoute.Manifest {
     description:
       "NOME DA EMPRESA AQUI é um sistema interno para uso corporativo.",
     start_url: paths.auth.login,
+    scope: paths.root,
     display: "standalone",
     background_color: "#ffffff",
     theme_color: "#000000",
     icons: [
       {
-        src: "/logo_dark.png",
+        src: "/icon.png",
         sizes: "192x192",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/logo_dark.png",
+        src: "/icon.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",

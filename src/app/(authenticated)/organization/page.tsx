@@ -4,7 +4,7 @@ import { getOrganizations } from "@/server/organizations/organizations";
 import { paths } from "@/shared/constants/paths";
 import Link from "next/link";
 
-export default async function OrganizacaoPage() {
+export default async function OrganizationPage() {
   const organizations = await getOrganizations();
   const hasOrgs = organizations.length > 0;
 

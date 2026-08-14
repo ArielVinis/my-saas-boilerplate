@@ -35,7 +35,7 @@ export function OrganizationSwitcher({
   if (organizations.length === 0) {
     return (
       <Button asChild size="sm" className="w-full justify-start">
-        <Link href={paths.organizacao}>
+        <Link href={paths.organization}>
           <Plus className="size-4" />
           Criar clínica
         </Link>
@@ -45,7 +45,7 @@ export function OrganizationSwitcher({
 
   const handleChangeOrganization = async (organizationId: string) => {
     if (organizationId === "__create__") {
-      router.push(paths.organizacao);
+      router.push(paths.organization);
       return;
     }
     try {
