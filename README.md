@@ -14,7 +14,7 @@ Aplicação web corporativa para gestão interna (dashboard, leads de matrícula
 | **React 19**               | Interface                            |
 | **TypeScript**             | Tipagem                              |
 | **Better Auth**            | Autenticação, sessões e organizações |
-| **Prisma 7**               | ORM (SQLite em desenvolvimento)      |
+| **Prisma 7**               | ORM (PostgreSQL)                     |
 | **Tailwind CSS 4**         | Estilos                              |
 | **shadcn/ui**              | Componentes de UI                    |
 | **TanStack Query / Table** | Dados no cliente e tabelas           |
@@ -35,6 +35,7 @@ Aplicação web corporativa para gestão interna (dashboard, leads de matrícula
 
 - **Node.js** 20+
 - **pnpm** 10+ (o projeto define `packageManager` no `package.json`; use `corepack enable` se preferir)
+- **PostgreSQL** (local ou hosted, p.ex. Supabase)
 - Conta **Resend** para envio de e-mails
 - Credenciais OAuth (Google e/ou Microsoft Entra ID), conforme os provedores que for usar
 
@@ -55,8 +56,8 @@ Crie um arquivo `.env` na raiz do projeto com:
 BETTER_AUTH_URL="http://localhost:3000"
 BETTER_AUTH_SECRET="gere-um-secret-com-openssl-rand-base64-32"
 
-# Banco (SQLite em desenvolvimento)
-DATABASE_URL="file:./dev.db"
+# Banco (PostgreSQL)
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?schema=public"
 
 # E-mail (Resend)
 RESEND_API_KEY="re_..."
@@ -87,7 +88,7 @@ Detalhes de troubleshooting do login Microsoft: [`docs/auth-microsoft-entra-id.m
 
 ### 3. Banco de dados
 
-O projeto usa **SQLite** (`dev.db`) em desenvolvimento. Para gerar o client e sincronizar o schema:
+O projeto usa **PostgreSQL**. Para gerar o client e sincronizar o schema:
 
 ```bash
 pnpm exec prisma generate
